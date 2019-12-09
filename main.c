@@ -168,11 +168,18 @@ int main(int argc, char *argv[]) {
 				printf(" -----------> Wrong cmd!! input again!..\n");
 				break;
 		}
-            
-}
+           
+        //backup the status of the storage
+		if (str_backupSystem(STORAGE_FILEPATH) != 0)
+		{
+			printf("[WARNING] failed to backup the delivery system!\n");
+		} 
+}while(cmd != 0);
+	
+	str_freeSystem();
+	
 	return 0;
-
-}while ()
-
 }
+
+
 

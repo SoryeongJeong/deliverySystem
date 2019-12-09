@@ -76,13 +76,12 @@ static int inputPasswd(int x, int y) {
 	printf("- input password for (%d, %d) storage : ", x,y);			// input password for (x, y) storage , x and y = row and column of storage
 	password = getIntegerInput();										// input x and y 
 	
-	if (deliverySystem[x][y].passwd[PASSWD_LEN+1] == password);			//deliverySystem[x][y]'s password = when input the password (match!)
+	if (deliverySystem[x][y].passwd[PASSWD_LEN+1] == password)			//deliverySystem[x][y]'s password = when input the password (match!)
 	{
-		return 0;
-		
+		return 0;	
 	}
-	else																//deliverySystem[x][y]'s password and input the password are different.
-	{	
+	else 															//deliverySystem[x][y]'s password and input the password are different.
+	{
 		return -1;	
 	}
 		
@@ -117,10 +116,10 @@ int str_backupSystem(char* filepath) {
 int str_createSystem(char* filepath) {	
 	
 	int row;									//storage's row (row of ROW 4)
-	FILE *filepath = NULL;
-	filepath = fopen("storage.txt", "r");
+	FILE *fp;									//point file structure
+	fp = fopen(filepath, "r");			//file open : read mode
 	
-	//memory allocate about structure : doubler pointer
+	//memory allocate about structure : double pointer
 	
 	struct storage_t** deliverySystem; 
 	
@@ -213,7 +212,7 @@ int str_checkStorage(int x, int y) {
 int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_SIZE+1], char passwd[PASSWD_LEN+1]) {
 	
 	FILE *fp;
-	fp = open("storage.txt¡±, "w");
+	fp = fopen("storage.txt¡±,"w");
 	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg[MAX_MSG_SIZE+1], passwd[PASSWD_LEN+1]);			//file open and input a storage information
 	fclose(f);
 
@@ -226,7 +225,9 @@ int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_S
 		return 0;
 	}
 	else
+	{
 		return -1;
+	}
 }
 
 
@@ -256,7 +257,7 @@ int str_extractStorage(int x, int y) {
 //return : number of packages that the storage system has
 int str_findStorage(int nBuilding, int nRoom) {
 	
-	if((nBuilding == deliverySystem[i][j].building)&& (nRoom ==deliverySystem[i][j].room))
+	if((nBuilding == deliverySystem[systemSize[0]][systemSize[1]].building)&& (nRoom ==deliverySystem[systemSize[0]][systemSize[1]].room))
 	{
 		printf("-----------------------> Found a package in (%d, %d)", nBuilding, nRoom);
 		return 0;
