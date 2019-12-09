@@ -47,5 +47,35 @@ int buildingValidityCheck(int nBuilding, int nRoom)
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char *argv[]) {
+	
+	int cmd;							//command number 1. put a package 2. get my package 3. check the storage status 4. find my package
+	int x, y, nBuilding, nRoom;			// storage row, column, building number, room number
+	char msg[MAX_MSG_SIZE+1];			//my input message
+	char passwd[PASSWD_LEN+1];			//my input password
+	
+	//1. initialize the delivery system
+	if (str_createSystem(STORAGE_FILEPATH) != 0)
+	{
+		printf("failed to open storage config file! (%s)\n", STORAGE_FILEPATH);
+		return -1;
+	}
+	
+	printf("------- Unmanned Delivery Storage System START -------\n");
+	
+	do
+	{
+        //2. menu printing
+		printf("\n\n");
+		printf("----------------------------------------------\n");
+		printf("1. put a package\n");
+		printf("2. get my package\n");
+		printf("3. check the storage status\n");
+		printf("4. find my package\n");
+		printf("0. exit\n");
+		printf("----------------------------------------------\n");
+		printf("command : ");
+		
+        //3. getting user command
+		cmd = getIntegerInput();	
 	return 0;
 }

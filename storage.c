@@ -88,3 +88,59 @@ static int inputPasswd(int x, int y) {
 		
 }
 
+
+// ------- API function for main.c file ---------------
+
+//backup the delivery system context to the file system
+//char* filepath : filepath and name to write
+//return : 0 - backup was successfully done, -1 - failed to backup
+int str_backupSystem(char* filepath) {
+	
+	int i;
+	FILE *fp;					//point file structure
+	fp= fopen(filepath,"r");	//file open : read mode
+
+	if (fp = NULL)	
+	{
+		return -1;
+	}
+	
+	fclose(fp);				//file close
+	
+	return 0;
+	
+}
+
+//create delivery system on the double pointer deliverySystem
+//char* filepath : filepath and name to read config parameters (row, column, master password, past contexts of the delivery system
+//return : 0 - successfully created, -1 - failed to create the system
+int str_createSystem(char* filepath) {	
+	
+	int row;									//storage's row (row of ROW 4)
+	FILE *filepath = NULL;
+	filepath = fopen("storage.txt", "r");
+	
+	//memory allocate about structure : doubler pointer
+	
+	struct storage_t** deliverySystem; 
+	
+	deliverySystem = (struct storage_t**)malloc(ROW*sizeof (struct storage_t*));
+	for(row=0;row<ROW;row++)
+	{
+		deliverySystem[row] = (struct storage_t*)malloc(COLUMN*sizeof(struct storage_t));
+	}
+	
+	for (row=0;row<ROW;row++)
+	free(deliverySystem[row]);
+	free(deliverySystem);
+	
+	if (fp = NULL)
+	{
+		return -1;
+	}
+	
+	fclose(fp);
+	
+	return 0;
+	
+}
