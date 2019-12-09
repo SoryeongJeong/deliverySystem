@@ -62,11 +62,12 @@ int main(int argc, char *argv[]) {
 	
 	printf("------- Unmanned Delivery Storage System START -------\n");
 	
+	#if 0
 	do
 	{
         //2. menu printing
 		printf("\n\n");
-		printf("----------------------------------------------\n");
+		printf("---------------------------------------------\n");
 		printf("1. put a package\n");
 		printf("2. get my package\n");
 		printf("3. check the storage status\n");
@@ -78,6 +79,7 @@ int main(int argc, char *argv[]) {
         //3. getting user command
 		cmd = getIntegerInput();	
 		
+
 		switch(cmd)
 		{
             //4-1. command analysis : exit the program
@@ -177,6 +179,7 @@ int main(int argc, char *argv[]) {
 }while(cmd != 0);
 	
 	str_freeSystem();
+#endif
 	
 	return 0;
 }

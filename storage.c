@@ -115,28 +115,40 @@ int str_backupSystem(char* filepath) {
 //return : 0 - successfully created, -1 - failed to create the system
 int str_createSystem(char* filepath) {	
 	
+	int x = systemSize[0];
+	int y = systemSize[1];
+	int nBuilding = deliverySystem[x][y].building;
+	int nRoom = deliverySystem[x][y].room;
+	char msg= deliverySystem[x][y].context;
+	char ps = deliverySystem[x][y].passwd;
+	filepath = "storage.txt";
+	
 	int row;									//storage's row (row of ROW 4)
 	FILE *fp;									//point file structure
-	fp = fopen(filepath, "r");			//file open : read mode
+	fp = fopen(filepath, "r");					//file open : read mode
 	
 	//memory allocate about structure : double pointer
 	
 	struct storage_t** deliverySystem; 
 	
-	deliverySystem = (struct storage_t**)malloc(ROW*sizeof (struct storage_t*));
+	deliverySystem = (storage_t**)malloc(ROW*sizeof (storage_t*));
 	for(row=0;row<ROW;row++)
 	{
-		deliverySystem[row] = (struct storage_t*)malloc(COLUMN*sizeof(struct storage_t));
+		deliverySystem[row] = (storage_t*)malloc(COLUMN*sizeof(storage_t));
 	}
 	
 	for (row=0;row<ROW;row++)
 	free(deliverySystem[row]);
 	free(deliverySystem);
 	
+	fp = fopen(filepath, "r");
+	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg, ps);
+	
 	if (fp = NULL)
 	{
 		return -1;
 	}
+	
 	
 	fclose(fp);
 	
@@ -144,9 +156,14 @@ int str_createSystem(char* filepath) {
 	
 }
 
+
+
 //free the memory of the deliverySystem 
 void str_freeSystem(void) {
 	
+	int row;
+	for (row=0;row<ROW;row++)
+	free(deliverySystem[row]);
 	free(deliverySystem);
 	
 	return;
@@ -212,9 +229,9 @@ int str_checkStorage(int x, int y) {
 int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_SIZE+1], char passwd[PASSWD_LEN+1]) {
 	
 	FILE *fp;
-	fp = fopen("storage.txt¡±,"w");
+	fp = fopen("storage.txt", "w");
 	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg[MAX_MSG_SIZE+1], passwd[PASSWD_LEN+1]);			//file open and input a storage information
-	fclose(f);
+	fclose(fp);
 
 	if ((x < 0 || x >= systemSize[0]) && 
 		(y < 0 || y >= systemSize[1]) && 
@@ -257,16 +274,17 @@ int str_extractStorage(int x, int y) {
 //return : number of packages that the storage system has
 int str_findStorage(int nBuilding, int nRoom) {
 	
-	if((nBuilding == deliverySystem[systemSize[0]][systemSize[1]].building)&& (nRoom ==deliverySystem[systemSize[0]][systemSize[1]].room))
+	if((nBuilding == deliverySystem[systemSize[0]][systemSize[1]].building)&&(nRoom ==deliverySystem[systemSize[0]][systemSize[1]].room))
 	{
 		printf("-----------------------> Found a package in (%d, %d)", nBuilding, nRoom);
-		return 0;
 	}
 	else
 	{
 		return -1;
 	}
 	
-	return cnt;
+	return 0;
 }
 
+#if 0
+#endif
