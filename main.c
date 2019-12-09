@@ -135,7 +135,40 @@ int main(int argc, char *argv[]) {
 					printf(" -----------> Failed to put the package in the storage!\n");
 				}
 				break;
+			
+			 //4-4. command analysis : print the storage status
+			case 3:
+				str_printStorageStatus();
+				break;
                 
+			//4-4. command analysis : find my package from the storage
+			case 4:
+                //input the destination (my address)
+				printf(" - building # : ");
+				nBuilding = getIntegerInput();
+				printf(" - room # : ");
+				nRoom = getIntegerInput();
+                
+				//check whether the address is valid or not
+				if (buildingValidityCheck(nBuilding, nRoom) != 0)
+				{
+					printf(" -----------> Invalid building/room number (%i,%i)\n", nBuilding, nRoom);
+					continue;
+				}
+				
+                //try to find packages destinated to the address
+				if (str_findStorage(nBuilding, nRoom) == 0)
+				{
+					printf(" -----------> Failed to find my package!\n");
+				}
+				
+				break;
+				
+			default:
+				printf(" -----------> Wrong cmd!! input again!..\n");
+				break;
+		}
+            
 }
 	return 0;
 

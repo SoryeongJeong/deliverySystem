@@ -76,7 +76,7 @@ static int inputPasswd(int x, int y) {
 	printf("- input password for (%d, %d) storage : ", x,y);			// input password for (x, y) storage , x and y = row and column of storage
 	password = getIntegerInput();										// input x and y 
 	
-	if (deliverySystem[x][y].passwd[PASSWD_LEN+1] == password);			//deliverySystem[x][y]'s password = when input the password
+	if (deliverySystem[x][y].passwd[PASSWD_LEN+1] == password);			//deliverySystem[x][y]'s password = when input the password (match!)
 	{
 		return 0;
 		
@@ -201,3 +201,71 @@ int str_checkStorage(int x, int y) {
 	
 	return deliverySystem[x][y].cnt;	
 }
+
+
+//put a package (msg) to the cell
+//input parameters
+//int x, int y : coordinate of the cell to put the package
+//int nBuilding, int nRoom : building and room numbers of the destination
+//char msg[] : package context (message string)
+//char passwd[] : password string (4 characters)
+//return : 0 - successfully put the package, -1 - failed to put
+int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_SIZE+1], char passwd[PASSWD_LEN+1]) {
+	
+	FILE *fp;
+	fp = open("storage.txt¡±, "w");
+	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg[MAX_MSG_SIZE+1], passwd[PASSWD_LEN+1]);			//file open and input a storage information
+	fclose(f);
+
+	if ((x < 0 || x >= systemSize[0]) && 
+		(y < 0 || y >= systemSize[1]) && 
+		(buildingValidityCheck(nBuilding, nRoom)==0) && 
+		(strlen(msg[MAX_MSG_SIZE+1])<100) &&
+		(strlen(passwd[PASSWD_LEN+1])==4))
+	{
+		return 0;
+	}
+	else
+		return -1;
+}
+
+
+//extract the package context with password checking
+//after password checking, then put the msg string on the screen and re-initialize the storage
+//int x, int y : coordinate of the cell to extract
+//return : 0 - successfully extracted, -1 = failed to extract
+int str_extractStorage(int x, int y) {
+	
+	inputPasswd(x, y);			
+	
+	if(inputPasswd(x, y)==0)					// deliverySystem[x][y]'s password = when input the password 
+	{
+		printStorageInside(x, y); 				//print storage's message
+	}
+	else
+	{
+		return -1;
+	}
+	
+	return 0;
+}
+
+//find my package from the storage
+//print all the cells (x,y) which has my package
+//int nBuilding, int nRoom : my building/room numbers
+//return : number of packages that the storage system has
+int str_findStorage(int nBuilding, int nRoom) {
+	
+	if((nBuilding == deliverySystem[i][j].building)&& (nRoom ==deliverySystem[i][j].room))
+	{
+		printf("-----------------------> Found a package in (%d, %d)", nBuilding, nRoom);
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
+	
+	return cnt;
+}
+
