@@ -62,7 +62,6 @@ int main(int argc, char *argv[]) {
 	
 	printf("------- Unmanned Delivery Storage System START -------\n");
 	
-	#if 0
 	do
 	{
         //2. menu printing
@@ -179,7 +178,6 @@ int main(int argc, char *argv[]) {
 }while(cmd != 0);
 	
 	str_freeSystem();
-#endif
 	
 	return 0;
 }

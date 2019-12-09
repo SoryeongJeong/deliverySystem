@@ -10,8 +10,7 @@ typedef struct {
 	int building; 	 						//building number of the destination
 	int room;								//room number of the destination
 	int cnt;								//number of packages in the cell
-	char passwd[PASSWD_LEN+1];				//password setting (4 characters)
-	
+	char passwd[PASSWD_LEN+1];				//password setting (4 characters)	
 	char *context; 							//package context (message string)
 } storage_t;
 
@@ -19,9 +18,6 @@ static storage_t** deliverySystem; 			//deliverySystem (building, room, cnt, pas
 static int storedCnt = 0;					//number of cells occupied
 static int systemSize[2] = {0, 0};  		//row/column of the delivery system
 static char masterPassword[PASSWD_LEN+1];	//master password
-
-
-
 
 // ------- inner functions ---------------
 
@@ -95,10 +91,9 @@ static int inputPasswd(int x, int y) {
 //return : 0 - backup was successfully done, -1 - failed to backup
 int str_backupSystem(char* filepath) {
 	
-	int i;
 	FILE *fp;					//point file structure
 	fp= fopen(filepath,"r");	//file open : read mode
-
+	
 	if (fp = NULL)	
 	{
 		return -1;
@@ -115,32 +110,31 @@ int str_backupSystem(char* filepath) {
 //return : 0 - successfully created, -1 - failed to create the system
 int str_createSystem(char* filepath) {	
 	
+		
+	//variable = txt contents 
 	int x = systemSize[0];
 	int y = systemSize[1];
 	int nBuilding = deliverySystem[x][y].building;
 	int nRoom = deliverySystem[x][y].room;
 	char msg= deliverySystem[x][y].context;
 	char ps = deliverySystem[x][y].passwd;
-	filepath = "storage.txt";
 	
 	int row;									//storage's row (row of ROW 4)
 	FILE *fp;									//point file structure
 	fp = fopen(filepath, "r");					//file open : read mode
 	
-	//memory allocate about structure : double pointer
-	
+	//memory allocate about structure and free : double pointer	
 	struct storage_t** deliverySystem; 
-	
 	deliverySystem = (storage_t**)malloc(ROW*sizeof (storage_t*));
 	for(row=0;row<ROW;row++)
 	{
 		deliverySystem[row] = (storage_t*)malloc(COLUMN*sizeof(storage_t));
 	}
-	
 	for (row=0;row<ROW;row++)
 	free(deliverySystem[row]);
 	free(deliverySystem);
 	
+	// after allocation, delivery system <-- txt's contents
 	fp = fopen(filepath, "r");
 	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg, ps);
 	
@@ -205,12 +199,12 @@ void str_printStorageStatus(void) {
 
 //check if the input cell (x,y) is valid and whether it is occupied or not
 int str_checkStorage(int x, int y) {
-	if (x < 0 || x >= systemSize[0])
+	if (x < 0 || x >= systemSize[0])		//it y is inadequate row number(0,1,2,3)
 	{
 		return -1;
 	}
 	
-	if (y < 0 || y >= systemSize[1])
+	if (y < 0 || y >= systemSize[1])		//if y is inadequate column number(0,1,2,3,4,5)
 	{
 		return -1;
 	}
@@ -230,14 +224,12 @@ int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_S
 	
 	FILE *fp;
 	fp = fopen("storage.txt", "w");
-	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg[MAX_MSG_SIZE+1], passwd[PASSWD_LEN+1]);			//file open and input a storage information
+	fscanf(fp,"%d %d %100s %4s",x,y,nBuilding,nRoom, msg, passwd);			//file open and input a storage information
 	fclose(fp);
-
-	if ((x < 0 || x >= systemSize[0]) && 
+	
+	if ((x < 0 || x >= systemSize[0]) && 								// x = storage's row , y = storage's column, nBuilding and nRoom are valid
 		(y < 0 || y >= systemSize[1]) && 
-		(buildingValidityCheck(nBuilding, nRoom)==0) && 
-		(strlen(msg[MAX_MSG_SIZE+1])<100) &&
-		(strlen(passwd[PASSWD_LEN+1])==4))
+		(buildingValidityCheck(nBuilding, nRoom)==0))
 	{
 		return 0;
 	}
@@ -254,7 +246,7 @@ int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_S
 //return : 0 - successfully extracted, -1 = failed to extract
 int str_extractStorage(int x, int y) {
 	
-	inputPasswd(x, y);			
+	inputPasswd(x, y);							// input a password function 
 	
 	if(inputPasswd(x, y)==0)					// deliverySystem[x][y]'s password = when input the password 
 	{
@@ -274,6 +266,7 @@ int str_extractStorage(int x, int y) {
 //return : number of packages that the storage system has
 int str_findStorage(int nBuilding, int nRoom) {
 	
+	// input Building number = deliverySystem's building number , input roomnumber =  deliverySystem's room number
 	if((nBuilding == deliverySystem[systemSize[0]][systemSize[1]].building)&&(nRoom ==deliverySystem[systemSize[0]][systemSize[1]].room))
 	{
 		printf("-----------------------> Found a package in (%d, %d)", nBuilding, nRoom);
@@ -282,9 +275,6 @@ int str_findStorage(int nBuilding, int nRoom) {
 	{
 		return -1;
 	}
-	
 	return 0;
 }
 
-#if 0
-#endif
