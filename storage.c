@@ -144,3 +144,60 @@ int str_createSystem(char* filepath) {
 	return 0;
 	
 }
+
+//free the memory of the deliverySystem 
+void str_freeSystem(void) {
+	
+	free(deliverySystem);
+	
+	return;
+	
+}
+
+
+//print the current state of the whole delivery system (which cells are occupied and the destination of the each occupied cells)
+void str_printStorageStatus(void) {
+	int i, j;
+	printf("----------------------------- Delivery Storage System Status (%i occupied out of %i )-----------------------------\n\n", storedCnt, systemSize[0]*systemSize[1]);
+	
+	printf("\t");
+	for (j=0;j<systemSize[1];j++)
+	{
+		printf(" %i\t\t",j);
+	}
+	printf("\n-----------------------------------------------------------------------------------------------------------------\n");
+	
+	for (i=0;i<systemSize[0];i++)
+	{
+		printf("%i|\t",i);
+		for (j=0;j<systemSize[1];j++)
+		{
+			if (deliverySystem[i][j].cnt > 0)
+			{
+				printf("%i,%i\t|\t", deliverySystem[i][j].building, deliverySystem[i][j].room);
+			}
+			else
+			{
+				printf(" -  \t|\t");
+			}
+		}
+		printf("\n");
+	}
+	printf("--------------------------------------- Delivery Storage System Status --------------------------------------------\n\n");
+}
+
+
+//check if the input cell (x,y) is valid and whether it is occupied or not
+int str_checkStorage(int x, int y) {
+	if (x < 0 || x >= systemSize[0])
+	{
+		return -1;
+	}
+	
+	if (y < 0 || y >= systemSize[1])
+	{
+		return -1;
+	}
+	
+	return deliverySystem[x][y].cnt;	
+}

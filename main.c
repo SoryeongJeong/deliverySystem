@@ -77,5 +77,69 @@ int main(int argc, char *argv[]) {
 		
         //3. getting user command
 		cmd = getIntegerInput();	
-	return 0;
+		
+		switch(cmd)
+		{
+            //4-1. command analysis : exit the program
+			case 0:
+				printf(" -----------> exiting the program....\n");
+				break;
+			
+            //4-2. command analysis : put package
+            //	   command : 1 
+			case 1:
+                //provide the current status
+				str_printStorageStatus();
+				
+                //storage cell selection
+				printf(" - storage row : ");
+				x = getIntegerInput();
+				printf(" - storage column : ");
+				y = getIntegerInput();
+				if (str_checkStorage(x,y) != 0)
+				{
+					printf(" -----------> Storage (%i,%i) is already occupied or invalid!\n", x, y);
+					continue;
+				}
+				
+                //destination input
+				printf(" - building # : ");
+				nBuilding = getIntegerInput();
+				printf(" - room # : ");
+				nRoom = getIntegerInput();
+				if (buildingValidityCheck(nBuilding, nRoom) != 0)
+				{
+					printf(" -----------> Invalid building/room number (%i,%i)\n", nBuilding, nRoom);
+					continue;
+				}
+				
+                //package context input (message string)
+				printf(" - message (max : 100 characters) : ");
+				scanf("%100s", msg);
+				fflush(stdin);
+				
+                //password input
+				passwd[0] = 0;
+				printf(" - password : ");
+				scanf("%4s", passwd);
+				fflush(stdin);
+				
+                //put the package in the cell
+				printf(" -----------> processing to put the package...\n\n");
+				if (str_pushToStorage(x, y, nBuilding, nRoom, msg, passwd) == 0)
+				{
+					printf(" -----------> Succeeded to put package for (%i, %i) user in (%i,%i), msg : %s passwd : %s\n", nBuilding, nRoom, x, y, msg, passwd);
+				}
+				else
+				{
+					printf(" -----------> Failed to put the package in the storage!\n");
+				}
+				break;
+                
 }
+	return 0;
+
+}while ()
+
+}
+
