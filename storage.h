@@ -1,8 +1,6 @@
 #define MAX_MSG_SIZE			100
 #define PASSWD_LEN				4
 
-#define ROW 					4 		//Delivery storage system's row
-#define COLUMN 					6		//Delivery storage Systerm's clomun
 
 int str_createSystem(char* filepath);
 void str_freeSystem(void);

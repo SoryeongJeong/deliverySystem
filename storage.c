@@ -16,7 +16,7 @@ typedef struct {
 
 static storage_t** deliverySystem; 			//deliverySystem (building, room, cnt, password, context)
 static int storedCnt = 0;					//number of cells occupied
-static int systemSize[2] = {0, 0};  		//row/column of the delivery system
+static int systemSize[2] = {4, 6};  		//row/column of the delivery system
 static char masterPassword[PASSWD_LEN+1];	//master password
 
 // ------- inner functions ---------------
@@ -43,9 +43,9 @@ static void printStorageInside(int x, int y) {
 static void initStorage(int x, int y) {
 	
 	int num; 										//n'th password number (for example, password 1234 :  1st password number = 1)
-	for(x=0;x<ROW;x++)
+	for(x=0;x<systemSize[0];x++)
 	{
-		for(y=0;y<COLUMN;y++)				    	 //set all the member variable as an initial value
+		for(y=0;y<systemSize[0];y++)				    	 //set all the member variable as an initial value
 		{	
 			deliverySystem[x][y].building = 0;
 			deliverySystem[x][y].room = 0;
@@ -111,19 +111,17 @@ int str_backupSystem(char* filepath) {
 int str_createSystem(char* filepath) {	
 	
 		
-	//variable = txt contents 
-	int x = systemSize[0];
-	int y = systemSize[1];
-	int nBuilding = deliverySystem[x][y].building;
-	int nRoom = deliverySystem[x][y].room;
-	char msg= deliverySystem[x][y].context;
-	char ps = deliverySystem[x][y].passwd;
 	
 	int row, column;							//storage's row (row of ROW 4) and storage's column (column of COLUMN 6)
 	int input_r, input_c;						// input_r : input row, input_c: input column
+	
 	FILE *fp = NULL;							//point file structure & make file null
 	fp = fopen(filepath, "r");					//file open : read mode
-	char c;
+
+	if (fp = NULL)
+	{
+		return -1;							//failed to create the systerm -> return -1;
+	}
 	
 	fscanf(fp,"%d %d %s", &systemSize[0],&systemSize[1], masterPassword);
 
@@ -134,6 +132,7 @@ int str_createSystem(char* filepath) {
 		deliverySystem[row] = (storage_t*)malloc(systemSize[1]*sizeof(storage_t));
 	}
 	
+	//memory allocate (use of malloc), context
 	for(row=0;row<systemSize[0];row++)
 	{
 		for(column=0; column<systemSize[1]; column++)
@@ -142,20 +141,13 @@ int str_createSystem(char* filepath) {
 		}
 	}
 	
-	while(fscanf(fp, "%d %d", &input_r, &input_c ==2))
+	while(fscanf(fp, "%d %d", &input_r, &input_c) ==2)
 	{
 		fscanf(fp,"%d %d %s %s",deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
 								deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
 		printf("%d %d %s %d %d %d %d %s", systemSize[0], systemSize[1], masterPassword, input_r, input_c,
 										deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
 										deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
-	}
-	
-	
-	
-	if (fp = NULL)
-	{
-		return -1;							//failed to create the systerm -> return -1;
 	}
 	
 	
@@ -170,7 +162,7 @@ int str_createSystem(char* filepath) {
 void str_freeSystem(void) {
 	
 	int row;
-	for (row=0;row<ROW;row++)
+	for (row=0;row<systemSize[0];row++)
 	free(deliverySystem[row]);
 	free(deliverySystem);
 	
