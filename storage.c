@@ -3,8 +3,6 @@
 #include <string.h>
 #include "storage.h"
 
-
-
 // definition of storage cell structure ----------------------------------------------
 typedef struct {
 	int building; 	 						//building number of the destination
@@ -16,7 +14,7 @@ typedef struct {
 
 static storage_t** deliverySystem; 			//deliverySystem (building, room, cnt, password, context)
 static int storedCnt = 0;					//number of cells occupied
-static int systemSize[2] = {4, 6};  		//row/column of the delivery system
+static int systemSize[2] = {4,6};  		//row/column of the delivery system
 static char masterPassword[PASSWD_LEN+1];	//master password
 
 // ------- inner functions ---------------
@@ -96,7 +94,7 @@ int str_backupSystem(char* filepath) {
 	FILE *fp = NULL;					//point file structure
 	fp= fopen(filepath,"r");	//file open : read mode
 	
-	if (fp = NULL)	
+	if (fp == NULL)	
 	{
 		return -1;
 	}
@@ -112,23 +110,22 @@ int str_backupSystem(char* filepath) {
 //return : 0 - successfully created, -1 - failed to create the system
 int str_createSystem(char* filepath) {	
 	
-		
+	int row, column;									//storage's row (row of ROW 4) and storage's column (column of COLUMN 6)
+	int input_r, input_c;								// input_r : input row, input_c: input column
 	
-	int row, column;							//storage's row (row of ROW 4) and storage's column (column of COLUMN 6)
-	int input_r, input_c;						// input_r : input row, input_c: input column
-	
-	FILE *fp = NULL;							//point file structure & make file null
-	fp = fopen(filepath, "r");					//file open : read mode
+	FILE *fp = NULL;						//point file structure & make file null
+	fp = fopen(filepath, "r");							//file open : read mode
 
-	if (fp = NULL)
+	if (fp == NULL)
 	{
-		return -1;							//failed to create the systerm -> return -1;
+		return -1;										//failed to create the systerm -> return -1;
 	}
 	
 	fscanf(fp,"%d %d %s", &systemSize[0],&systemSize[1], masterPassword);
+	
 
 	//memory allocate about structure and free : double pointer	
-	deliverySystem = (storage_t**)malloc(systemSize[0]*sizeof (storage_t*));
+	deliverySystem = (storage_t**)malloc(systemSize[0]*sizeof(storage_t*));
 	for(row=0;row<systemSize[0];row++)
 	{
 		deliverySystem[row] = (storage_t*)malloc(systemSize[1]*sizeof(storage_t));
@@ -143,17 +140,18 @@ int str_createSystem(char* filepath) {
 		}
 	}
 	
+	//put deliverysystem's information in storage
 	while(fscanf(fp, "%d %d", &input_r, &input_c) ==2)
 	{
-		fscanf(fp,"%d %d %s %s",deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
-								deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
+		fscanf(fp,"%d %d %s %s", &deliverySystem[input_r][input_c].building, &deliverySystem[input_r][input_c].room,
+								 deliverySystem[input_r][input_c].passwd, deliverySystem[input_r][input_c].context);
 		printf("%d %d %s %d %d %d %d %s", systemSize[0], systemSize[1], masterPassword, input_r, input_c,
 										deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
 										deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
 	}
 	
 	
-	fclose(fp);
+	fclose(fp);							// close file
 	
 	return 0;
 	
@@ -164,9 +162,19 @@ int str_createSystem(char* filepath) {
 void str_freeSystem(void) {
 	
 	int row;
+	int column;
 	for (row=0;row<systemSize[0];row++)
-	free(deliverySystem[row]);
-	free(deliverySystem);
+	{
+		free(deliverySystem[row]);														//free deliverySystem
+	}
+	
+	for(row=0;row<systemSize[0];row++)													//free deliverySystem.context
+	{
+		for(column=0; column<systemSize[1]; column++)
+		{
+			free(deliverySystem[row][column].context);
+		}
+	}
 	
 	return;
 	
@@ -203,7 +211,6 @@ void str_printStorageStatus(void) {
 	}
 	printf("--------------------------------------- Delivery Storage System Status --------------------------------------------\n\n");
 }
-
 
 //check if the input cell (x,y) is valid and whether it is occupied or not
 int str_checkStorage(int x, int y) {
@@ -277,7 +284,7 @@ int str_findStorage(int nBuilding, int nRoom) {
 	// input Building number = deliverySystem's building number , input roomnumber =  deliverySystem's room number
 	if((nBuilding == deliverySystem[systemSize[0]][systemSize[1]].building)&&(nRoom ==deliverySystem[systemSize[0]][systemSize[1]].room))
 	{
-		printf("-----------------------> Found a package in (%d, %d)", nBuilding, nRoom);
+		printf("-----------------------> Found a package in (%d, %d)", nBuilding, nRoom);			//fint storage in locker
 	}
 	else
 	{

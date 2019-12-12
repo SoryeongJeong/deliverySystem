@@ -44,14 +44,14 @@ int buildingValidityCheck(int nBuilding, int nRoom)
 	return 0;
 }
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 int main(int argc, char *argv[]) {
 	
-	int cmd;							//command number 1. put a package 2. get my package 3. check the storage status 4. find my package
-	int x, y, nBuilding, nRoom;			// storage row, column, building number, room number
-	char msg[MAX_MSG_SIZE+1];			//my input message
-	char passwd[PASSWD_LEN+1];			//my input password
+	
+	int cmd;								//command number 1. put a package 2. get my package 3. check the storage status 4. find my package
+	int x, y, nBuilding, nRoom;				// storage row, column, building number, room number
+	char msg[MAX_MSG_SIZE+1];				//my input message
+	char passwd[PASSWD_LEN+1];				//my input password
 	
 	//1. initialize the delivery system
 	if (str_createSystem(STORAGE_FILEPATH) != 0)
@@ -61,12 +61,12 @@ int main(int argc, char *argv[]) {
 	}
 	
 	printf("------- Unmanned Delivery Storage System START -------\n");
-
+	
 	do
 	{
         //2. menu printing
 		printf("\n\n");
-		printf("---------------------------------------------\n");
+		printf("----------------------------------------------\n");
 		printf("1. put a package\n");
 		printf("2. get my package\n");
 		printf("3. check the storage status\n");
@@ -78,7 +78,6 @@ int main(int argc, char *argv[]) {
         //3. getting user command
 		cmd = getIntegerInput();	
 		
-
 		switch(cmd)
 		{
             //4-1. command analysis : exit the program
@@ -87,11 +86,9 @@ int main(int argc, char *argv[]) {
 				break;
 			
             //4-2. command analysis : put package
-            //	   command : 1 
 			case 1:
                 //provide the current status
 				str_printStorageStatus();
-				
                 //storage cell selection
 				printf(" - storage row : ");
 				x = getIntegerInput();
@@ -136,8 +133,29 @@ int main(int argc, char *argv[]) {
 					printf(" -----------> Failed to put the package in the storage!\n");
 				}
 				break;
-			
-			 //4-4. command analysis : print the storage status
+                
+			//4-3. command analysis : extract my package
+			case 2:
+                //input the storage cell
+				printf(" - storage row : ");
+				x = getIntegerInput();
+				printf(" - storage column : ");
+				y = getIntegerInput();
+				
+                //check the input storage cell
+				if (str_checkStorage(x,y) <= 0)
+				{
+					printf(" -----------> Storage (%i,%i) is empty or invalid!\n", x, y);
+					continue;
+				}
+                //try to extract the cell
+				if (str_extractStorage(x,y) != 0)
+				{
+					printf(" -----------> Failed to extract my package!\n");
+				}
+				break;
+				
+            //4-4. command analysis : print the storage status
 			case 3:
 				str_printStorageStatus();
 				break;
@@ -169,17 +187,17 @@ int main(int argc, char *argv[]) {
 				printf(" -----------> Wrong cmd!! input again!..\n");
 				break;
 		}
-           
+		
         //backup the status of the storage
 		if (str_backupSystem(STORAGE_FILEPATH) != 0)
 		{
 			printf("[WARNING] failed to backup the delivery system!\n");
-		} 
-}while(cmd != 0);
+		}
+		
+		
+	} while (cmd != 0);
 	
 	str_freeSystem();
-
+	
 	return 0;
 }
-
-
