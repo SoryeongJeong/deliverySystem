@@ -119,28 +119,43 @@ int str_createSystem(char* filepath) {
 	char msg= deliverySystem[x][y].context;
 	char ps = deliverySystem[x][y].passwd;
 	
-	int row;									//storage's row (row of ROW 4)
-	FILE *fp;									//point file structure
+	int row, column;							//storage's row (row of ROW 4) and storage's column (column of COLUMN 6)
+	int input_r, input_c;						// input_r : input row, input_c: input column
+	FILE *fp = NULL;							//point file structure & make file null
 	fp = fopen(filepath, "r");					//file open : read mode
+	char c;
 	
+	fscanf(fp,"%d %d %s", &systemSize[0],&systemSize[1], masterPassword);
+
 	//memory allocate about structure and free : double pointer	
-	struct storage_t** deliverySystem; 
-	deliverySystem = (storage_t**)malloc(ROW*sizeof (storage_t*));
-	for(row=0;row<ROW;row++)
+	deliverySystem = (storage_t**)malloc(systemSize[0]*sizeof (storage_t*));
+	for(row=0;row<systemSize[0];row++)
 	{
-		deliverySystem[row] = (storage_t*)malloc(COLUMN*sizeof(storage_t));
+		deliverySystem[row] = (storage_t*)malloc(systemSize[1]*sizeof(storage_t));
 	}
-	for (row=0;row<ROW;row++)
-	free(deliverySystem[row]);
-	free(deliverySystem);
 	
-	// after allocation, delivery system <-- txt's contents
-	fp = fopen(filepath, "r");
-	fscanf(fp,"%d %d %s %s",x,y,nBuilding,nRoom, msg, ps);
+	for(row=0;row<systemSize[0];row++)
+	{
+		for(column=0; column<systemSize[1]; column++)
+		{
+			deliverySystem[row][column].context = (char *)malloc(100*sizeof(char));
+		}
+	}
+	
+	while(fscanf(fp, "%d %d", &input_r, &input_c ==2))
+	{
+		fscanf(fp,"%d %d %s %s",deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
+								deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
+		printf("%d %d %s %d %d %d %d %s", systemSize[0], systemSize[1], masterPassword, input_r, input_c,
+										deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
+										deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
+	}
+	
+	
 	
 	if (fp = NULL)
 	{
-		return -1;
+		return -1;							//failed to create the systerm -> return -1;
 	}
 	
 	
@@ -149,7 +164,6 @@ int str_createSystem(char* filepath) {
 	return 0;
 	
 }
-
 
 
 //free the memory of the deliverySystem 
