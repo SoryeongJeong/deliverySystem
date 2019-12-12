@@ -14,7 +14,7 @@ typedef struct {
 
 static storage_t** deliverySystem; 										//deliverySystem (building, room, cnt, password, context)
 static int storedCnt = 0;												//number of cells occupied
-static int systemSize[2] = {4,6};  										//row/column of the delivery system
+static int systemSize[2] = {0,0};  										//row/column of the delivery system
 static char masterPassword[PASSWD_LEN+1];								//master password
 
 // ------- inner functions ---------------
@@ -122,7 +122,6 @@ int str_createSystem(char* filepath) {
 	}
 	
 	fscanf(fp,"%d %d %s", &systemSize[0],&systemSize[1], masterPassword);
-	
 
 	//memory allocate about structure and free : double pointer	
 	deliverySystem = (storage_t**)malloc(systemSize[0]*sizeof(storage_t*));
@@ -145,9 +144,7 @@ int str_createSystem(char* filepath) {
 	{
 		fscanf(fp,"%d %d %s %s", &deliverySystem[input_r][input_c].building, &deliverySystem[input_r][input_c].room,
 								 deliverySystem[input_r][input_c].passwd, deliverySystem[input_r][input_c].context);
-		printf("%d %d %s %d %d %d %d %s", systemSize[0], systemSize[1], masterPassword, input_r, input_c,
-										deliverySystem[input_r][input_c].building,deliverySystem[input_r][input_c].room,
-										deliverySystem[input_r][input_c].passwd,deliverySystem[input_r][input_c].context);
+		storedCnt ++;												// storedCnt out of 24 locker
 	}
 	
 	
