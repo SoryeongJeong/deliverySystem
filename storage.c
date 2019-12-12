@@ -42,10 +42,10 @@ static void printStorageInside(int x, int y) {
 
 static void initStorage(int x, int y) {
 	
-	int num; 	//n'th password number (for example, password 1234 :  1st password number = 1)
+	int num; 										//n'th password number (for example, password 1234 :  1st password number = 1)
 	for(x=0;x<ROW;x++)
 	{
-		for(y=0;y<COLUMN;y++)					 //set all the member variable as an initial value
+		for(y=0;y<COLUMN;y++)				    	 //set all the member variable as an initial value
 		{	
 			deliverySystem[x][y].building = 0;
 			deliverySystem[x][y].room = 0;
@@ -76,7 +76,7 @@ static int inputPasswd(int x, int y) {
 	{
 		return 0;	
 	}
-	else 															//deliverySystem[x][y]'s password and input the password are different.
+	else 														     	//deliverySystem[x][y]'s password and input the password are different.
 	{
 		return -1;	
 	}
