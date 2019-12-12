@@ -45,22 +45,18 @@ static void initStorage(int x, int y) {
 	int num; 										//n'th password number (for example, password 1234 :  1st password number = 1)
 	for(x=0;x<systemSize[0];x++)
 	{
-		for(y=0;y<systemSize[0];y++)				    	 //set all the member variable as an initial value
+		for(y=0;y<systemSize[1];y++)				    	 //set all the member variable as an initial value
 		{	
 			deliverySystem[x][y].building = 0;
 			deliverySystem[x][y].room = 0;
 			deliverySystem[x][y].cnt = 0;
 			
-			for (num=0; num<PASSWD_LEN; num++)
-			{
-				deliverySystem[x][y].passwd[num] = "";
-			}
-			deliverySystem[x][y].context = "";	
-			
+			deliverySystem[x][y].context = "";
 		}
 	
 	}
-	return 0;
+	
+	return;
 }
 
 //get password input and check if it is correct for the cell (x,y)
@@ -68,19 +64,25 @@ static void initStorage(int x, int y) {
 //return : 0 - password is matching, -1 - password is not matching
 static int inputPasswd(int x, int y) {
 	
-	int password;														// input
+	int password[4];													// input
+	int i;
 	printf("- input password for (%d, %d) storage : ", x,y);			// input password for (x, y) storage , x and y = row and column of storage
-	password = getIntegerInput();										// input x and y 
-	
-	if (deliverySystem[x][y].passwd[PASSWD_LEN+1] == password)			//deliverySystem[x][y]'s password = when input the password (match!)
+	password[0] = getIntegerInput();									// input x and y 
+	password[1] = getIntegerInput();
+	password[2] = getIntegerInput();
+	password[3] = getIntegerInput();
+
+	for (i=0;i<PASSWD_LEN+1;i++)
 	{
-		return 0;	
+		if (deliverySystem[x][y].passwd[i] == password[i])						//deliverySystem[x][y]'s password = when input the password (match!)
+		{
+			return 0;	
+		}
+		else 														     	//deliverySystem[x][y]'s password and input the password are different.
+		{
+			return -1;	
+		}
 	}
-	else 														     	//deliverySystem[x][y]'s password and input the password are different.
-	{
-		return -1;	
-	}
-		
 }
 
 
@@ -91,7 +93,7 @@ static int inputPasswd(int x, int y) {
 //return : 0 - backup was successfully done, -1 - failed to backup
 int str_backupSystem(char* filepath) {
 	
-	FILE *fp;					//point file structure
+	FILE *fp = NULL;					//point file structure
 	fp= fopen(filepath,"r");	//file open : read mode
 	
 	if (fp = NULL)	
@@ -228,14 +230,12 @@ int str_checkStorage(int x, int y) {
 //return : 0 - successfully put the package, -1 - failed to put
 int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_SIZE+1], char passwd[PASSWD_LEN+1]) {
 	
-	FILE *fp;
+	FILE *fp = NULL;
 	fp = fopen("storage.txt", "w");
-	fscanf(fp,"%d %d %100s %4s",x,y,nBuilding,nRoom, msg, passwd);			//file open and input a storage information
-	fclose(fp);
+	fscanf(fp,"%d %d %100s %4s",x,y,nBuilding,nRoom, msg, passwd);								//file open and input a storage information
 	
-	if ((x < 0 || x >= systemSize[0]) && 								// x = storage's row , y = storage's column, nBuilding and nRoom are valid
-		(y < 0 || y >= systemSize[1]) && 
-		(buildingValidityCheck(nBuilding, nRoom)==0))
+	
+	if ((str_checkStorage(x, y) != -1) && (buildingValidityCheck(nBuilding, nRoom)==0))			// x = storage's row , y = storage's column, nBuilding and nRoom are valid
 	{
 		return 0;
 	}
@@ -243,6 +243,8 @@ int str_pushToStorage(int x, int y, int nBuilding, int nRoom, char msg[MAX_MSG_S
 	{
 		return -1;
 	}
+	
+	fclose(fp);
 }
 
 
